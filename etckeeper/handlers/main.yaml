@@ -1,0 +1,10 @@
+- name: commit /etc
+  command: 'etckeeper commit "Commit by Ansible: saving state."'
+  ignore_errors: yes
+
+- name: repack git directory
+  command: git gc chdir=/etc
+  ignore_errors: yes
+
+- name: initialise etckeeper
+  command: etckeeper init creates=/etc/.git/config

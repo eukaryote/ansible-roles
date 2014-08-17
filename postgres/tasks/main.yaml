@@ -1,0 +1,45 @@
+- name: install postgres apt key
+  apt_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc state=present
+
+- name: install postgres apt repository
+  apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' state=present
+
+- name: install postgres server
+  apt: name=postgresql-9.3 update_cache=yes state=present
+
+# headers needed by psycopg2
+- name: install postgres headers
+  apt: name=libpq-dev
+
+# needed by remaining ansible pg tasks
+- name: install python-psycopg2
+  apt: name=python-psycopg2 state=present
+
+- name: allow local postgres access
+  lineinfile:
+      backup=yes
+      dest=/etc/postgresql/9.3/main/pg_hba.conf
+      backrefs=yes
+      regexp="^(local\s+all\s+all\s+)(peer)\s*$"
+      line="\1md5"
+  notify: reload postgres
+
+- meta: flush_handlers
+
+- name: create postgres user
+  sudo_user: postgres
+  postgresql_user:
+      name='{{ postgres_username }}'
+      password='{{ postgres_password }}'
+      role_attr_flags='CREATEDB,NOSUPERUSER,NOCREATEROLE'
+  when: postgres_username|bool and postgres_password|bool
+
+- name: create postgres database
+  postgresql_db:
+      name='{{ postgres_database }}'
+      login_user='{{ postgres_username }}'
+      login_password='{{ postgres_password }}'
+      encoding='UTF-8'
+      lc_collate='en_US.UTF-8'
+      lc_ctype='en_US.UTF-8'
+  when: postgres_database|bool and postgres_username|bool and postgres_password|bool

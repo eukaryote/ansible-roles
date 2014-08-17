@@ -1,0 +1,41 @@
+- name: install fail2ban
+  apt: pkg=fail2ban
+    state=installed
+    update_cache=yes
+  sudo: yes
+
+- name: create local fail2ban conf
+  command: cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+    creates=/etc/fail2ban/jail.local
+  sudo: yes
+  notify: restart fail2ban
+
+- name: set fail2ban bantime to 1 hour
+  # ini_file doesn't work with default section
+  lineinfile: dest=/etc/fail2ban/jail.local
+      regexp="^bantime = "
+      state=present
+      line="bantime = 3600"
+  sudo: yes
+
+- name: set fail2ban destemail
+  # ini_file doesn't work with default section
+  lineinfile: dest=/etc/fail2ban/jail.local
+      regexp="^destemail = "
+      state=present
+      line="destemail = {{ fail2ban_email }}"
+  sudo: yes
+  when: fail2ban_email|bool
+  notify: restart fail2ban
+
+- name: enable fail2ban filters
+  ini_file: dest=/etc/fail2ban/jail.local
+    section=$item
+    option=enabled
+    value=true
+  with_items:
+    - ssh
+    - ssh-ddos
+    - pam-generic
+  sudo: yes
+  notify: restart fail2ban

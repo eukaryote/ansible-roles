@@ -1,0 +1,7 @@
+- name: restart postfix
+  service: name=postfix state=restarted
+  sudo: yes
+
+- name: reload postfix
+  service: name=postfix state=reloaded
+  sudo: yes
