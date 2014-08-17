@@ -1,0 +1,37 @@
+- name: disallow ssh password authentication
+  lineinfile: dest=/etc/ssh/sshd_config
+    regexp='^#?PasswordAuthentication'
+    line='PasswordAuthentication no'
+    state=present
+  notify: restart ssh
+
+- name: only allow ssh protocol 2
+  lineinfile: dest=/etc/ssh/sshd_config
+    regexp='^#?Protocol '
+    line='Protocol 2'
+    state=present
+  notify: restart ssh
+
+- name: disallow X11 forwarding
+  lineinfile: dest=/etc/ssh/sshd_config
+    regexp='^#?X11Forwarding '
+    line='X11Forwarding no'
+    state=present
+  notify: restart ssh
+
+- name: disallow rshosts
+  lineinfile: dest=/etc/ssh/sshd_config
+    regexp='^#?IgnoreRhosts '
+    line='IgnoreRhosts yes'
+    state=present
+  notify: restart ssh
+
+# ssh init script should create ed25519 host key but doesn't in
+# in OpenSSH_6.6.1p1, so create it manually if necessary.
+- name: create ed25519 ssh host key
+  command: /usr/bin/ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ''
+    creates=/etc/ssh/ssh_host_ed25519_key
+  notify: restart ssh
+
+# run handlers immediately to put ssh changes into effect
+- meta: flush_handlers

@@ -1,13 +1,11 @@
-- name: install git
-  apt: pkg=git state=present
-
 - name: install etckeeper
   apt: pkg=etckeeper state=present
+  sudo: yes
   notify: initialise etckeeper
 
-- name: configure etckeeper to use git
+- name: configure etckeeper vcs
   lineinfile: dest=/etc/etckeeper/etckeeper.conf
     regexp='^VCS='
     state=present
-    line='VCS="git"'
+    line='VCS="{{etckeeper_vcs}}"'
   sudo: yes

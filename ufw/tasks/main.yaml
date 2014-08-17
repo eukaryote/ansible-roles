@@ -1,0 +1,14 @@
+- name: enable firewall
+  ufw: state=enabled
+
+- name: allow ssh through firewall
+  ufw: rule=allow name=OpenSSH
+
+- name: allow http through firewall
+  ufw: rule=allow port=80 proto=tcp
+
+- name: allow tls through firewall
+  ufw: rule=allow port=443 proto=tcp
+
+- name: set firewall policy to deny
+  ufw: policy="{{ ufw_policy }}"

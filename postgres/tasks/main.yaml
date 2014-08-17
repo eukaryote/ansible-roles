@@ -32,7 +32,7 @@
       name='{{ postgres_username }}'
       password='{{ postgres_password }}'
       role_attr_flags='CREATEDB,NOSUPERUSER,NOCREATEROLE'
-  when: postgres_username|bool and postgres_password|bool
+  when: postgres_username is defined and postgres_password is defined
 
 - name: create postgres database
   postgresql_db:
@@ -42,4 +42,4 @@
       encoding='UTF-8'
       lc_collate='en_US.UTF-8'
       lc_ctype='en_US.UTF-8'
-  when: postgres_database|bool and postgres_username|bool and postgres_password|bool
+  when: postgres_database is defined and postgres_username is defined and postgres_password is defined
