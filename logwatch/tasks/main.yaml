@@ -1,5 +1,5 @@
 - name: install logwatch
-  apt: pkg=logwatch state=installed update_cache=yes
+  apt: pkg=logwatch state=installed
   sudo: yes
 
 - name: conifgure logwatch to email daily
