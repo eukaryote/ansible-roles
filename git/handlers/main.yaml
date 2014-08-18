@@ -1,0 +1,4 @@
+# git config for root user
+- name: git installed
+  shell: git config --global user.email root@localhost && git config --global user.name root creates=/root/.gitconfig
+  sudo: yes

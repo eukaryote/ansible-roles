@@ -1,6 +1,5 @@
 - name: set hostname
   hostname: name='{{ host_hostname }}'
-  sudo: yes
 
 - name: add hostname to /etc/hosts 127.0.0.1
   lineinfile: dest=/etc/hosts
@@ -9,4 +8,3 @@
     owner=root
     group=root
     mode=0644
-  sudo: yes

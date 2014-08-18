@@ -1,6 +1,7 @@
 - name: install git
   apt: pkg=git state=present
   sudo: yes
+  notify: git installed
 
 - name: install git-flow
   apt: pkg=git-flow state=present

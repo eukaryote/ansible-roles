@@ -1,14 +1,14 @@
 - name: create group for user
   group: name="{{ user_group_name }}" gid="{{ user_group_gid }}"
-  when: user_group_name|bool and user_group_gid|bool
 
 - name: create user
   user: name="{{ user_username }}"
     uid="{{ user_uid }}"
     shell=/bin/bash
-    groups="{{ user_group_name }},adm"
+    group="{{ user_group_name }}"
+    groups="adm"
     password="{{ user_password }}"
-  when: user_username|bool and user_uid|bool and user_password|bool and user_group_name|bool
+    generate_ssh_key=yes
 
 - name: add authorized key for user
   authorized_key:

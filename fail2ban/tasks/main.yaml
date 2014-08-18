@@ -25,7 +25,7 @@
       state=present
       line="destemail = {{ fail2ban_email }}"
   sudo: yes
-  when: fail2ban_email|bool
+  when: fail2ban_email is defined
   notify: restart fail2ban
 
 - name: enable fail2ban filters
