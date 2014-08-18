@@ -19,12 +19,18 @@
     state=present
   notify: restart ssh
 
-- name: disallow rshosts
+- name: disallow rhosts
   lineinfile: dest=/etc/ssh/sshd_config
     regexp='^#?IgnoreRhosts '
     line='IgnoreRhosts yes'
     state=present
   notify: restart ssh
+
+- name: configure login grace time
+  lineinfile: dest=/etc/ssh/sshd_config
+    regexp='^#?LoginGraceTime '
+    line='LoginGraceTime 30s'
+    state=present
 
 # ssh init script should create ed25519 host key but doesn't in
 # in OpenSSH_6.6.1p1, so create it manually if necessary.
