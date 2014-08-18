@@ -17,6 +17,7 @@
       line="bantime = 3600"
   sudo: yes
 
+# where to send emails
 - name: set fail2ban destemail
   lineinfile: dest=/etc/fail2ban/jail.local
       regexp="^destemail = "
@@ -24,6 +25,14 @@
       line="destemail = {{ fail2ban_email }}"
   sudo: yes
   when: fail2ban_email is defined
+  notify: restart fail2ban
+
+# FROM address for sent emails
+- name: set fail2ban sender
+  lineinfile: dest=/etc/fail2ban/action.d/sendmail-common.conf
+    regexp='^sender\s*='
+    line='sender = {{fail2ban_sender}}'
+  when: fail2ban_sender is defined
   notify: restart fail2ban
 
 - name: configure fail2ban action
