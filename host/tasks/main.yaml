@@ -12,3 +12,11 @@
     owner=root
     group=root
     mode=0644
+
+- name: set timezone
+  lineinfile: dest=/etc/timezone
+    regexp='^[\S]+'
+    line='{{host_timezone}}'
+    state=present
+  notify: timezone changed
+  when: host_timezone is defined
