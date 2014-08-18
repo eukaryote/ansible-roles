@@ -1,22 +1,21 @@
 - name: install postfix and mailutils
-  apt: pkg={{ item }} update_cache=yes
+  apt: pkg={{ item }}
   with_items:
     - postfix
     - mailutils
-  sudo: yes
 
 # TODO: update this later to listen on external interface
 - name: configure postfix listen interfaces
-  lineinfile: dest=/etc/postfix/main.cf regexp='^inet_interfaces' line='inet_interfaces = 127.0.0.1'
-  sudo: yes
+  lineinfile: dest=/etc/postfix/main.cf
+    regexp='^inet_interfaces '
+    line='inet_interfaces = 127.0.0.1'
+    state=present
   notify: restart postfix
 
 - name: configure postfix mailname
   shell: executable=/bin/bash debconf-set-selections <<< "postfix postfix/mailname string '{{ postfix_mailname }}'"
-  sudo: yes
   notify: reload postfix
 
 - name: configure postfix mailer type
   shell: executable=/bin/bash debconf-set-selections <<< "postfix postfix/main_mailer_type string '{{ postfix_mailer_type }}'"
-  sudo: yes
   notify: reload postfix
