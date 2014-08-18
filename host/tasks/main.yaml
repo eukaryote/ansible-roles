@@ -1,6 +1,10 @@
 - name: set hostname
   hostname: name='{{ host_hostname }}'
 
+- name: set domainname
+  command: domainname '{{ host_domainname }}'
+  when: host_domainname is defined
+
 - name: add hostname to /etc/hosts 127.0.0.1
   lineinfile: dest=/etc/hosts
     regexp='^127\.0\.0\.1\s+localhost'
