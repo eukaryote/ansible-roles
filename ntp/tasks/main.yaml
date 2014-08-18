@@ -1,0 +1,5 @@
+- name: install ntp
+  apt: pkg=ntp state=installed
+
+- name: start ntpd
+  service: name=ntp state=started enabled=yes
