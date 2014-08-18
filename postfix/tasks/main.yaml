@@ -9,8 +9,14 @@
   lineinfile: dest=/etc/postfix/main.cf
     regexp='^inet_interfaces '
     line='inet_interfaces = 127.0.0.1'
-    state=present
   notify: restart postfix
+
+- name: configure postfix origin domain
+  lineinfile: dest=/etc/mailname
+    insertbefore='BOF'
+    line='{{ postfix_mailname }}'
+    create=yes
+  notify: reload postfix
 
 - name: configure postfix mailname
   shell: executable=/bin/bash debconf-set-selections <<< "postfix postfix/mailname string '{{ postfix_mailname }}'"
