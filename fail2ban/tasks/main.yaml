@@ -1,7 +1,6 @@
 - name: install fail2ban
   apt: pkg=fail2ban
     state=installed
-    update_cache=yes
   sudo: yes
 
 - name: create local fail2ban conf
@@ -10,8 +9,8 @@
   sudo: yes
   notify: restart fail2ban
 
+# the DEFAULT section changes need to use lineinfile
 - name: set fail2ban bantime to 1 hour
-  # ini_file doesn't work with default section
   lineinfile: dest=/etc/fail2ban/jail.local
       regexp="^bantime = "
       state=present
@@ -19,7 +18,6 @@
   sudo: yes
 
 - name: set fail2ban destemail
-  # ini_file doesn't work with default section
   lineinfile: dest=/etc/fail2ban/jail.local
       regexp="^destemail = "
       state=present
@@ -28,14 +26,22 @@
   when: fail2ban_email is defined
   notify: restart fail2ban
 
+- name: configure fail2ban action
+  lineinfile: dest=/etc/fail2ban/jail.local
+    regexp='^action = %\(action_'
+    state=present
+    line='action = %(action_mwl)s'
+
 - name: enable fail2ban filters
   ini_file: dest=/etc/fail2ban/jail.local
-    section=$item
+    section="{{item}}"
     option=enabled
     value=true
   with_items:
     - ssh
     - ssh-ddos
     - pam-generic
+    - nginx-http-auth
+    - postfix
   sudo: yes
   notify: restart fail2ban
