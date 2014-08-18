@@ -5,7 +5,7 @@
   apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' state=present
 
 - name: install postgres server
-  apt: name=postgresql-9.3 update_cache=yes state=present
+  apt: name=postgresql-9.3 state=present
 
 # headers needed by psycopg2
 - name: install postgres headers
