@@ -25,3 +25,12 @@
 - name: configure postfix mailer type
   shell: executable=/bin/bash debconf-set-selections <<< "postfix postfix/main_mailer_type string '{{ postfix_mailer_type }}'"
   notify: reload postfix
+
+- name: copy /etc/postfix/main.cf configuration script
+  template: src=configure-main.sh
+      dest=/var/tmp/postfix-configure-main.sh
+      mode=755
+
+- name: run /etc/postfix/main.cf configuration script
+  command: /var/tmp/postfix-configure-main.sh
+  notify: reload postfix
