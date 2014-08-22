@@ -29,8 +29,9 @@
 - name: configure login grace time
   lineinfile: dest=/etc/ssh/sshd_config
     regexp='^#?LoginGraceTime '
-    line='LoginGraceTime 30s'
+    line="LoginGraceTime {{ssh_login_grace_time}}"
     state=present
+  notify: restart ssh
 
 # ssh init script should create ed25519 host key but doesn't in
 # in OpenSSH_6.6.1p1, so create it manually if necessary.
