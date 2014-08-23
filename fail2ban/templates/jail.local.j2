@@ -16,7 +16,7 @@ destemail = {{fail2ban_email}}
 {% endif %}
 
 {% if fail2ban_sender is defined %}
-destemail = {{fail2ban_sender}}
+sender = {{fail2ban_sender}}
 {% endif %}
 
 {% if fail2ban_enabled is defined %}
@@ -25,4 +25,16 @@ destemail = {{fail2ban_sender}}
 enabled = true
 
 {% endfor %}
+{% endif %}
+
+{% if fail2ban_ssh_repeater %}
+[ssh-repeater]
+enabled  = true
+filter   = sshd
+action   = iptables-repeater[name=ssh]
+            %(mta)s-whois[name=%(__name__)s, dest="%(destemail)s", sendername="%(sendername)s"]
+logpath  = /var/log/auth.log
+maxretry = {{ 3 * fail2ban_maxretry }}
+findtime = 31536000
+bantime  = 31536000
 {% endif %}

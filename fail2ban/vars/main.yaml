@@ -3,6 +3,9 @@ fail2ban_bantime: 600
 fail2ban_findtime: 600
 fail2ban_maxretry: 3
 fail2ban_action: '%(action_mwl)s'
+# if next is true, then the custom iptables-repeater action will be installed
+fail2ban_iptables_repeater: false
+fail2ban_ssh_repeater: false
 
 # 'fail2ban_email' may be an email address to which emails will be sent
 

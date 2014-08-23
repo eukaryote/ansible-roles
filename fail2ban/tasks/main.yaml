@@ -3,6 +3,10 @@
     state=installed
   sudo: yes
 
+- name: install iptables-repeater action
+  copy: dest=/etc/fail2ban/action.d/iptables-repeater.conf
+    src='actions/iptables-repeater.conf'
+
 - name: create local fail2ban conf
   template: src=jail.local.j2
     dest=/etc/fail2ban/jail.local
