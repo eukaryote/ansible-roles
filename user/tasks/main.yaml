@@ -17,3 +17,15 @@
 
 - name: add user to sudoers
   lineinfile: dest=/etc/sudoers regexp="{{ user_username }} ALL" line="{{ user_username }} ALL=(ALL) NOPASSWD:ALL" state=present
+
+- name: set forwarding email address
+  lineinfile: dest="/home/{{user_username}}/.forward"
+    regexp='^.+'
+    line="{{user_forward_email}}"
+    create=yes
+  when: user_forward_email is defined
+
+- name: clear forwarding email address
+  file: path="/home/{{user_username}}/.forward"
+    state=absent
+  when: user_forward_email is not defined
