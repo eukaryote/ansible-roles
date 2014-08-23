@@ -1,1 +1,6 @@
 postfix_mailer_type: 'Internet Site'
+
+# use 'all' for both ipv4 and ipv6
+postfix_protocols: 'ipv4'
+
+postfix_inet_interfaces: 'loopback-only'

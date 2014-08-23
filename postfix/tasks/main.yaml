@@ -26,6 +26,9 @@
   shell: executable=/bin/bash debconf-set-selections <<< "postfix postfix/main_mailer_type string '{{ postfix_mailer_type }}'"
   notify: reload postfix
 
+# it would be nice to have a module like 'script' that supports template
+# variables, which would combine the next two tasks into one task
+
 - name: copy /etc/postfix/main.cf configuration script
   template: src=configure-main.sh
       dest=/var/tmp/postfix-configure-main.sh
