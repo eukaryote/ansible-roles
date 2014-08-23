@@ -1,0 +1,14 @@
+---
+fail2ban_bantime: 600
+fail2ban_findtime: 600
+fail2ban_maxretry: 3
+fail2ban_action: '%(action_mwl)s'
+
+# 'fail2ban_email' may be an email address to which emails will be sent
+
+# 'fail2ban_sender' may be an email address to use as sender
+
+# 'fail2ban_enabled' may be a list of names like 'sshd', 'sshd-ddos'
+# representing the name of a filter section to enable in the jail.local;
+# only those listed will be in the jail.local, so the others will use
+# the default enabled=false in the main jail.conf file.
