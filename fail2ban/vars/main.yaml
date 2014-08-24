@@ -6,6 +6,7 @@ fail2ban_action: '%(action_mwl)s'
 # if next is true, then the custom iptables-repeater action will be installed
 fail2ban_iptables_repeater: false
 fail2ban_ssh_repeater: false
+fail2ban_banaction: iptables-multiport
 
 # 'fail2ban_email' may be an email address to which emails will be sent
 

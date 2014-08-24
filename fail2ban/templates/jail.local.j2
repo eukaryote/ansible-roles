@@ -1,22 +1,30 @@
 [DEFAULT]
 
 # how many seconds host will be banned
-bantime  = {{fail2ban_bantime}}
+bantime  = {{ fail2ban_bantime }}
 
 # ban if host generates 'maxretry' attempts during last 'findtime' seconds
-findtime = {{fail2ban_findtime}}
-maxretry = {{fail2ban_maxretry}}
+findtime = {{ fail2ban_findtime }}
+maxretry = {{ fail2ban_maxretry }}
 
 # action to take for banning, which should refer to one of the predefined
 # values in jail.conf
-action = {{fail2ban_action}}
+action = {{ fail2ban_action }}
 
 {% if fail2ban_email is defined %}
-destemail = {{fail2ban_email}}
+destemail = {{ fail2ban_email }}
 {% endif %}
 
 {% if fail2ban_sender is defined %}
-sender = {{fail2ban_sender}}
+sender = {{ fail2ban_sender }}
+{% endif %}
+
+{% if fail2ban_banaction is defined %}
+banaction = {{ fail2ban_banaction }}
+{% endif %}
+
+{% if fail2ban_usedns is defined %}
+usedns = {% if fail2ban_usedns %}true{% else %}false{% endif %}
 {% endif %}
 
 {% if fail2ban_enabled is defined %}
