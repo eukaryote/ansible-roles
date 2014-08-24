@@ -1,1 +1,3 @@
+# By default, we install an ubuntu nginx, but if set to 'yes', then the latest
+# nginx.org version is used instead.
 nginx_nginx_org_repo: no

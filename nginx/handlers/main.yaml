@@ -6,3 +6,35 @@
 
 - name: update apt
   apt: update_cache=yes
+
+# the 'sites-available' and 'sites-enabled' directories in /etc/nginx
+# won't exist if we installed nginx from nginx.org, so create them in
+# that case; all of the following tasks are defined here as handlers
+# so that they can easily be run only on the initial install of nginx.
+
+- name: create nginx sites-available
+  file: state=directory dest=/etc/nginx/sites-available
+  when: nginx_nginx_org_repo
+
+- name: create nginx sites-enabled
+  file: state=directory dest=/etc/nginx/sites-enabled
+  when: nginx_nginx_org_repo
+
+# Install the default nginx site (a single static HTML page).
+- name: install default nginx site
+  template: >
+    dest="/etc/nginx/sites-available/default"
+    src="nginx_default.conf"
+
+# comment out the line that includes anything in 'conf.d', so that
+# only what we explicitly enable in 'sites-enabled' will be used
+- name: disable nginx conf.d includes
+  lineinfile: >
+    dest='/etc/nginx/nginx.conf'
+    regexp='^(\s*)(include\s*/etc/nginx/conf.d/.*)'
+    backrefs=yes
+    line='\1# \2'
+
+# remove conf.d and any files inside it
+- name: remove nginx conf.d
+  file: state=absent dest=/etc/nginx/conf.d
