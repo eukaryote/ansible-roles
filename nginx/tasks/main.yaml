@@ -1,0 +1,28 @@
+- name: install nginx
+  apt: pkg=nginx
+    state=installed
+
+- name: install nginx site conf
+  template: >
+    dest="/etc/nginx/sites-available/{{item.name}}"
+    src="{{item.template}}"
+  with_items: nginx_sites
+  when: nginx_sites is defined
+  notify: reload nginx
+
+- name: enable nginx sites
+  file: >
+    dest="/etc/nginx/sites-enabled/{{ item }}"
+    src="/etc/nginx/sites-available/{{ item }}"
+    state=link
+  with_items: nginx_sites_enabled
+  when: nginx_sites_enabled is defined
+  notify: reload nginx
+
+- name: disable nginx sites
+  file: >
+    dest="/etc/nginx/sites-enabled/{{ item }}"
+    state=absent
+  with_items: nginx_sites_disabled
+  when: nginx_sites_disabled is defined
+  notify: reload nginx
