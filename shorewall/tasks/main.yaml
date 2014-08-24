@@ -1,0 +1,54 @@
+- name: configure apt to use shorewall testing versions
+  copy: dest=/etc/apt/preferences.d/{{item}}
+    src="apt/preferences.d/{{item}}"
+    mode=644
+    owner=root
+  with_items:
+    - shorewall
+    - shorewall-doc
+    - shorewall-init
+
+- name: install shorewall
+  apt: pkg=shorewall
+
+- name: install /etc/shorewall/shorewall.conf
+  template: >
+    dest=/etc/shorewall/shorewall.conf
+    src="{{ shorewall_template_shorewall_conf }}"
+    owner=root
+    mode=0600
+
+- name: install /etc/shorewall/zones
+  template: >
+    dest=/etc/shorewall/zones
+    src='{{ shorewall_template_zones }}'
+    owner=root
+    mode=0600
+
+- name: install /etc/shorewall/policy
+  template: >
+    dest=/etc/shorewall/policy
+    src='{{ shorewall_template_policy }}'
+    owner=root
+    mode=0600
+
+- name: install /etc/shorewall/rules
+  template: >
+    dest=/etc/shorewall/rules
+    src='{{ shorewall_template_rules }}'
+    owner=root
+    mode=0600
+
+- name: install /etc/shorewall/interfaces
+  template: >
+    dest=/etc/shorewall/interfaces
+    src='{{ shorewall_template_interfaces }}'
+    owner=root
+    mode=0600
+
+- name: enable shorewall
+  lineinfile: >
+    dest=/etc/default/shorewall
+    regexp='^startup='
+    line='startup=1'
+

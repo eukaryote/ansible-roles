@@ -1,0 +1,307 @@
+###############################################################################
+#
+#  Shorewall Version 4 -- /etc/shorewall/shorewall.conf
+#
+#  For information about the settings in this file, type "man shorewall.conf"
+#
+#  Manpage also online at http://www.shorewall.net/manpages/shorewall.conf.html
+###############################################################################
+#                      S T A R T U P   E N A B L E D
+###############################################################################
+
+STARTUP_ENABLED={% if shorewall_startup_enabled %}Yes{% else %}No{% endif %}
+
+
+###############################################################################
+#                             V E R B O S I T Y
+###############################################################################
+
+VERBOSITY={{shorewall_verbosity}}
+
+###############################################################################
+#                               L O G G I N G
+###############################################################################
+
+# Formerly named BLACKLIST_LOGLEVEL. This parameter determines if packets from
+# blacklisted hosts are logged and it determines the syslog level that they are
+# to be logged at. Its value is a syslog level (Example:
+# BLACKLIST_LOG_LEVEL=debug). If you do not assign a value or if you assign an
+# empty value then packets from blacklisted hosts are not logged. The setting
+# determines the log level of packets sent to the blacklog target of shorewall-
+# blrules(5).
+BLACKLIST_LOG_LEVEL={{shorewall_blacklist_log_level}}
+
+# Added in Shorewall 4.5.13. Packets in the INVALID state that do not
+# match any rule in the INVALID section of shorewall-rules (5) are
+# logged at this level. The default value is empty which means no
+# logging is performed.
+INVALID_LOG_LEVEL={{shorewall_invalid_log_level}}
+
+# If set to Yes or yes, sets /proc/sys/net/ipv4/conf/*/log_martians to 1
+# with the exception of /proc/sys/net/ipv4/conf/all/log_martians which is
+# set to 0. The default value is Yes which sets both of the above to one.
+# If you do not enable martian logging for all interfaces, you may still
+# enable it for individual interfaces using the logmartians interface
+# option in shorewall-interfaces(5).
+
+# The value Keep causes Shorewall to ignore the option. If the option is set to
+# Yes, then martians are logged on all interfaces. If the option is set to No,
+# then martian logging is disabled on all interfaces except those specified in
+# shorewall-interfaces(5).
+LOG_MARTIANS={{shorewall_log_martians}}
+
+# This option controls the amount of information logged to the file specified in the STARTUP_LOG option.
+#
+# Values are:
+#    -1 - Logging is disabled
+#    0 - Silent. Only error messages are logged.
+#    1 - Major progress messages logged.
+#    2 - All progress messages logged
+#
+# If not specified, then -1 is assumed.
+LOG_VERBOSITY={{shorewall_log_verbosity}}
+
+LOGALLNEW=
+
+LOGFILE=/var/log/messages
+
+LOGFORMAT="Shorewall:%s:%s:"
+
+LOGTAGONLY=No
+
+LOGLIMIT=
+
+MACLIST_LOG_LEVEL=info
+
+RELATED_LOG_LEVEL=
+
+RPFILTER_LOG_LEVEL=info
+
+SFILTER_LOG_LEVEL=info
+
+SMURF_LOG_LEVEL=info
+
+STARTUP_LOG=/var/log/shorewall-init.log
+
+TCP_FLAGS_LOG_LEVEL=info
+
+UNTRACKED_LOG_LEVEL=
+
+###############################################################################
+#       L O C A T I O N   O F   F I L E S   A N D   D I R E C T O R I E S
+###############################################################################
+
+ARPTABLES=
+
+CONFIG_PATH="${CONFDIR}/shorewall:${SHAREDIR}/shorewall"
+
+GEOIPDIR=/usr/share/xt_geoip/LE
+
+IPTABLES=
+
+IP=
+
+IPSET=
+
+LOCKFILE=
+
+MODULESDIR=
+
+NFACCT=
+
+PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin:/usr/local/sbin"
+
+PERL=/usr/bin/perl
+
+RESTOREFILE=restore
+
+SHOREWALL_SHELL=/bin/sh
+
+SUBSYSLOCK=""
+
+TC=
+
+###############################################################################
+#               D E F A U L T   A C T I O N S / M A C R O S
+###############################################################################
+
+ACCEPT_DEFAULT=none
+DROP_DEFAULT=Drop
+NFQUEUE_DEFAULT=none
+QUEUE_DEFAULT=none
+REJECT_DEFAULT=Reject
+
+###############################################################################
+#                        R S H / R C P  C O M M A N D S
+###############################################################################
+
+RCP_COMMAND='scp ${files} ${root}@${system}:${destination}'
+RSH_COMMAND='ssh ${root}@${system} ${command}'
+
+###############################################################################
+#                       F I R E W A L L   O P T I O N S
+###############################################################################
+
+ACCOUNTING=Yes
+
+ACCOUNTING_TABLE=filter
+
+ADD_IP_ALIASES=No
+
+ADD_SNAT_ALIASES=No
+
+ADMINISABSENTMINDED=Yes
+
+IGNOREUNKNOWNVARIABLES=No
+
+AUTOCOMMENT=Yes
+
+AUTOHELPERS=Yes
+
+AUTOMAKE=No
+
+BLACKLIST="NEW,INVALID,UNTRACKED"
+
+CHAIN_SCRIPTS=Yes
+
+CLAMPMSS=No
+
+CLEAR_TC=Yes
+
+COMPLETE=No
+
+DEFER_DNS_RESOLUTION=Yes
+
+DELETE_THEN_ADD=Yes
+
+DETECT_DNAT_IPADDRS=No
+
+DISABLE_IPV6=No
+
+DONT_LOAD=
+
+DYNAMIC_BLACKLIST=Yes
+
+EXPAND_POLICIES=Yes
+
+EXPORTMODULES=Yes
+
+FASTACCEPT=No
+
+FORWARD_CLEAR_MARK=
+
+HELPERS=
+
+IMPLICIT_CONTINUE=No
+
+IPSET_WARNINGS=Yes
+
+IP_FORWARDING=Keep
+
+KEEP_RT_TABLES=No
+
+LEGACY_FASTSTART=Yes
+
+LOAD_HELPERS_ONLY=No
+
+MACLIST_TABLE=filter
+
+MACLIST_TTL=
+
+MANGLE_ENABLED=Yes
+
+MAPOLDACTIONS=No
+
+MARK_IN_FORWARD_CHAIN=No
+
+MODULE_SUFFIX=ko
+
+MULTICAST=No
+
+MUTEX_TIMEOUT=60
+
+NULL_ROUTE_RFC1918=No
+
+OPTIMIZE=0
+
+OPTIMIZE_ACCOUNTING=No
+
+REJECT_ACTION=
+
+REQUIRE_INTERFACE=No
+
+RESTORE_DEFAULT_ROUTE=Yes
+
+RESTORE_ROUTEMARKS=Yes
+
+RETAIN_ALIASES=No
+
+ROUTE_FILTER=Yes
+
+SAVE_ARPTABLES=No
+
+SAVE_IPSETS=No
+
+TC_ENABLED=Internal
+
+TC_EXPERT=No
+
+TC_PRIOMAP="2 3 3 3 2 3 1 1 2 2 2 2 2 2 2 2"
+
+TRACK_PROVIDERS=No
+
+TRACK_RULES=No
+
+USE_DEFAULT_RT=No
+
+USE_PHYSICAL_NAMES=No
+
+USE_RT_NAMES=No
+
+WARNOLDCAPVERSION=Yes
+
+ZONE2ZONE=2
+
+###############################################################################
+#                       P A C K E T   D I S P O S I T I O N
+###############################################################################
+
+BLACKLIST_DISPOSITION=DROP
+
+INVALID_DISPOSITION=CONTINUE
+
+MACLIST_DISPOSITION=REJECT
+
+RELATED_DISPOSITION=ACCEPT
+
+RPFILTER_DISPOSITION=DROP
+
+SMURF_DISPOSITION=DROP
+
+SFILTER_DISPOSITION=DROP
+
+TCP_FLAGS_DISPOSITION=DROP
+
+UNTRACKED_DISPOSITION=CONTINUE
+
+
+################################################################################
+#                       P A C K E T  M A R K  L A Y O U T
+################################################################################
+
+TC_BITS=
+
+PROVIDER_BITS=
+
+PROVIDER_OFFSET=
+
+MASK_BITS=
+
+ZONE_BITS=0
+
+################################################################################
+#                            L E G A C Y  O P T I O N
+#                      D O  N O T  D E L E T E  O R  A L T E R
+################################################################################
+
+IPSECFILE=zones

@@ -1,0 +1,13 @@
+shorewall_startup_enabled: no
+
+shorewall_verbosity: 1
+shorewall_blacklist_log_level: ""
+shorewall_invalid_log_level: ""
+shorewall_log_martians: ""
+shorewall_log_verbosity: 1
+
+shorewall_template_zones: shorewall_default_zones.j2
+shorewall_template_shorewall_conf: shorewall_default_shorewall.conf.j2
+shorewall_template_policy: shorewall_default_policy.j2
+shorewall_template_rules: shorewall_default_rules.j2
+shorewall_template_interfaces: shorewall_default_interfaces.j2
