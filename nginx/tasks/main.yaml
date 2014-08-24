@@ -1,14 +1,60 @@
-- name: install nginx
-  apt: pkg=nginx
-    state=installed
+- name: add nginx apt key
+  apt_key: data="{{lookup('file', 'nginx_signing.key')}}" state=present
+  notify: update apt
+  when: nginx_nginx_org_repo
 
-- name: install nginx site conf
+- meta: flush_handlers
+
+- name: add nginx repo
+  apt_repository: state=present repo="{{item}}"
+  with_items:
+  - "deb http://nginx.org/packages/mainline/ubuntu/ {{ ansible_lsb.codename }} nginx"
+  - "deb-src http://nginx.org/packages/mainline/ubuntu/ {{ ansible_lsb.codename }} nginx"
+  when: nginx_nginx_org_repo
+
+- name: install software-properties-common
+  apt: name=software-properties-common state=present
+
+- name: install nginx
+  apt: name=nginx state=present
+
+# Am using the nginx.org build now, which doesn't do the 'sites-available'
+# and 'sites-enabled' setup that the ubuntu/debian build does, so mimic that
+# setup by creating 'sites-available' and making 'sites-enabled' a symlink
+# to '/etc/nginx/conf.d', which is how the nginx.org build does it.
+
+- name: create sites-available
+  file: state=directory dest=/etc/nginx/sites-available
+  when: nginx_nginx_org_repo
+
+- name: create sites-enabled
+  file: state=link dest=/etc/nginx/sites-enabled src=/etc/nginx/conf.d
+  when: nginx_nginx_org_repo
+
+- name: install nginx default site confs
+  template: >
+    dest="/etc/nginx/sites-available/{{item.name}}"
+    src="{{item.template}}"
+  with_items:
+  - { name: default, template: nginx_default.conf }
+  - { name: example_ssl, template: nginx_example_ssl.conf }
+  when: nginx_nginx_org_repo
+
+- name: disable nginx default site confs
+  file: >
+    dest="/etc/nginx/conf.d/{{item}}"
+    state=absent
+  with_items:
+  - default
+  - example_ssl
+  when: nginx_nginx_org_repo
+
+- name: install nginx custom site confs
   template: >
     dest="/etc/nginx/sites-available/{{item.name}}"
     src="{{item.template}}"
   with_items: nginx_sites
   when: nginx_sites is defined
-  notify: reload nginx
 
 - name: enable nginx sites
   file: >
@@ -25,4 +71,16 @@
     state=absent
   with_items: nginx_sites_disabled
   when: nginx_sites_disabled is defined
+  notify: reload nginx
+
+
+# enable the default if nothing would be enabled, which would prevent nginx
+# from being able to start.
+
+- name: enable default nginx site
+  file: >
+    dest=/etc/nginx/sites-enabled/default
+    src=/etc/nginx/sites-available/default
+    state=link
+  when: (nginx_sites is not defined or nginx_enabled is not defined) and (nginx_disabled is not defined or 'default' not in nginx_disabled)
   notify: reload nginx
