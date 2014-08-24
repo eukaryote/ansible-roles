@@ -17,6 +17,7 @@
     src="{{ shorewall_template_shorewall_conf }}"
     owner=root
     mode=0600
+  notify: restart shorewall
 
 - name: install /etc/shorewall/zones
   template: >
@@ -24,6 +25,7 @@
     src='{{ shorewall_template_zones }}'
     owner=root
     mode=0600
+  notify: restart shorewall
 
 - name: install /etc/shorewall/policy
   template: >
@@ -31,6 +33,7 @@
     src='{{ shorewall_template_policy }}'
     owner=root
     mode=0600
+  notify: restart shorewall
 
 - name: install /etc/shorewall/rules
   template: >
@@ -38,6 +41,7 @@
     src='{{ shorewall_template_rules }}'
     owner=root
     mode=0600
+  notify: restart shorewall
 
 - name: install /etc/shorewall/interfaces
   template: >
@@ -45,10 +49,13 @@
     src='{{ shorewall_template_interfaces }}'
     owner=root
     mode=0600
+  notify: restart shorewall
 
 - name: enable shorewall
   lineinfile: >
     dest=/etc/default/shorewall
     regexp='^startup='
     line='startup=1'
+  when: shorewall_startup_enabled|bool
+  notify: restart shorewall
 
