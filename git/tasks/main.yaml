@@ -3,8 +3,15 @@
   sudo: yes
   notify: git installed
 
-- name: install git-flow
-  apt: pkg=git-flow state=present
+- name: uninstall nvie git-flow
+  apt: pkg=git-flow state=absent
+
+# use AVH fork of git-flow, which is more actively maintained and developed
+- name: install AVH git-flow
+  shell: wget --no-check-certificate -q https://raw.github.com/petervanderdoes/gitflow/develop/contrib/gitflow-installer.sh && bash gitflow-installer.sh install develop
+  args:
+   chdir: /var/tmp
+   creates: /usr/local/bin/git-flow
 
 - name: install git-extras
   apt: pkg=git-extras state=present
