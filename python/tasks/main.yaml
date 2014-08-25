@@ -1,0 +1,11 @@
+# these are just the packages that need to be in the system python
+# in order to be able to use virtualenv and friends for installing
+# app-specific dependencies inside a virtualenv.
+- name: install system python utilities
+  apt: pkg="{{ item }}"
+  with_items:
+    - python-software-properties
+    - python-virtualenv
+    - python-pip
+    - virtualenvwrapper
+  sudo: yes
